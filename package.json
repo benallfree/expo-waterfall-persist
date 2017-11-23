@@ -1,5 +1,5 @@
 {
-  "name": "<RepoUser>/<RepoName>",
+  "name": "<NpmUser>/<RepoName>",
   "version": "0.1.0",
   "description": "<RepoName> is <PackageIs>",
   "main": "dist/index_bundle.js",
