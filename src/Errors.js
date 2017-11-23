@@ -1,4 +1,4 @@
 
 module.exports = {
-  PackagError: class extends Error { }
+  <PackageName>Error: class extends Error { }
 }
