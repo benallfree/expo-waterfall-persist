@@ -1,0 +1,73 @@
+{
+  "name": "<RepoUser>/<RepoName>",
+  "version": "0.1.0",
+  "description": "<RepoName> is <PackageIs>",
+  "main": "dist/index_bundle.js",
+  "directories": {
+    "test": "test"
+  },
+  "homepage": "https://miriamjs.org",
+  "bugs": {
+    "url": "https://github.com/<RepoUser>/<RepoName>/issues",
+    "email": "<PackageEmail>"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/<RepoUser>/<RepoName>.git"
+  },
+  "scripts": {
+    "test": "mocha-webpack --webpack-config=webpack.config.testing.js",
+    "test:watch": "mocha-webpack test/*-test.js --webpack-config=webpack.config.testing.js --watch",
+    "build": "webpack",
+    "build:watch": "webpack --watch"
+  },
+  "keywords": [
+    "miriam"
+  ],
+  "author": "<PackageAuthor>",
+  "license": "ISC",
+  "devDependencies": {
+    "@miriamjs/ioc": "^0.1.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-builtin-extend": "^1.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
+    "chai": "^4.1.2",
+    "chai-subset": "^1.6.0",
+    "lodash": "^4.17.4",
+    "mocha": "^4.0.1",
+    "mocha-webpack": "^1.0.1",
+    "path": "^0.12.7",
+    "standard": "^10.0.3",
+    "url-parse": "^1.2.0",
+    "webpack": "^3.8.1",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "peerDependencies": {
+    "babel-runtime": "^6.26.0"
+  },
+  "dependencies": {
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "alert",
+      "beforeEach",
+      "it",
+      "describe",
+      "use",
+      "fetch",
+      "assert",
+      "server",
+      "assertThrowsAsync"
+    ]
+  }
+}
