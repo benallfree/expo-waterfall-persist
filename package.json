@@ -27,7 +27,7 @@
   "author": "<PackageAuthor>",
   "license": "ISC",
   "devDependencies": {
-    "@miriamjs/ioc": "^0.1.1",
+    "@miriamjs/ioc": "^0.1.2",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
