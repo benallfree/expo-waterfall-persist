@@ -1,11 +1,11 @@
 # <RepoName>
 
-`<PackageName` is <PackageIs>
+`<RepoName>` is <PackageIs>
 
 <PackageLongDescription>
 
 ```
-npm install <PackageNpm>
+npm install <NpmUser>/<RepoName>
 ```
 
 # Features
@@ -17,7 +17,7 @@ npm install <PackageNpm>
 
 ## Watchman Configuration
 
-In order to use `<PackageName>` in your project while also developing it:
+In order to use `<RepoName>` in your project while also developing it:
 
 ```bash
 cd /my/local/spot
