@@ -1,4 +1,4 @@
 
 module.exports = {
-  <PackageName>Error: class extends Error { }
+  <PackageNameClassified>Error: class extends Error { }
 }
