@@ -31,6 +31,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
+    "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -42,11 +43,13 @@
     "babel-preset-es2017": "^6.24.1",
     "chai": "^4.1.2",
     "chai-subset": "^1.6.0",
+    "jest": "^21.2.1",
     "lodash": "^4.17.4",
     "mobx": "^3.3.2",
     "mocha": "^4.0.1",
     "mocha-webpack": "^1.0.1",
     "path": "^0.12.7",
+    "regenerator-runtime": "^0.11.0",
     "standard": "^10.0.3",
     "url-parse": "^1.2.0",
     "webpack": "^3.8.1",
@@ -55,8 +58,7 @@
   "peerDependencies": {
     "babel-runtime": "^6.26.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "standard": {
     "parser": "babel-eslint",
     "globals": [
@@ -66,9 +68,13 @@
       "describe",
       "use",
       "fetch",
-      "assert",
-      "server",
-      "assertThrowsAsync"
+      "expect",
+      "server"
     ]
+  },
+  "jest": {
+    "verbose": true,
+    "testMatch": ["**/__tests__/**/*.test.js?(x)"]
   }
 }
+
