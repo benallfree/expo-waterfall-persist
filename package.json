@@ -19,7 +19,10 @@
     "test": "mocha-webpack --webpack-config=webpack.config.testing.js",
     "test:watch": "mocha-webpack test/*-test.js --webpack-config=webpack.config.testing.js --watch",
     "build": "webpack",
-    "build:watch": "webpack --watch"
+    "build:watch": "webpack --watch",
+    "postinstall": "pm2 restart wml",
+    "postuninstall": "pm2 restart wml"
+
   },
   "keywords": [
     "miriam"
@@ -27,7 +30,7 @@
   "author": "<PackageAuthor>",
   "license": "ISC",
   "devDependencies": {
-    "@miriamjs/ioc": "^0.1.2",
+    "@miriamjs/chai-throw-async": "^0.1.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
@@ -42,18 +45,16 @@
     "babel-preset-es2017": "^6.24.1",
     "chai": "^4.1.2",
     "chai-subset": "^1.6.0",
-    "lodash": "^4.17.4",
-    "mobx": "^3.3.2",
     "mocha": "^4.0.1",
     "mocha-webpack": "^1.0.1",
-    "path": "^0.12.7",
     "standard": "^10.0.3",
-    "url-parse": "^1.2.0",
     "webpack": "^3.8.1",
+    "babel-runtime": "^6.26.0",
     "webpack-node-externals": "^1.6.0"
   },
   "peerDependencies": {
-    "babel-runtime": "^6.26.0"
+    "babel-runtime": "^6.26.0",
+    "@miriamjs/ioc": "^0.1.2"    
   },
   "dependencies": {
   },

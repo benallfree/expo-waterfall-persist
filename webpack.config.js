@@ -7,7 +7,7 @@ module.exports = {
     path: path.resolve('dist'),
     filename: 'index_bundle.js',
     library: '',
-    libraryTarget: 'commonjs'
+    libraryTarget: 'commonjs-module'
   },
   externals: [nodeExternals()],
   target: 'node',

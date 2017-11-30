@@ -1,6 +1,8 @@
 const chai = require('chai')
 const chaiSubset = require('chai-subset')
 chai.use(chaiSubset)
+const chaiThrowAsync = require('@miriamjs/chai-throw-async')
+chai.use(chaiThrowAsync)
 const assert = chai.assert
 
 global.assert = chai.assert
