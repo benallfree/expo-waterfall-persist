@@ -16,8 +16,8 @@
     "url": "https://github.com/<RepoUser>/<RepoName>.git"
   },
   "scripts": {
-    "test": "mocha-webpack --webpack-config=webpack.config.testing.js",
-    "test:watch": "mocha-webpack test/*-test.js --webpack-config=webpack.config.testing.js --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "build": "webpack",
     "build:watch": "webpack --watch",
     "postinstall": "pm2 restart wml",
@@ -30,10 +30,10 @@
   "author": "<PackageAuthor>",
   "license": "ISC",
   "devDependencies": {
-    "@miriamjs/chai-throw-async": "^0.1.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
+    "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -43,10 +43,9 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
-    "chai": "^4.1.2",
-    "chai-subset": "^1.6.0",
-    "mocha": "^4.0.1",
-    "mocha-webpack": "^1.0.1",
+    "jest": "^21.2.1",
+    "lodash": "^4.17.4",
+    "regenerator-runtime": "^0.11.0",
     "standard": "^10.0.3",
     "webpack": "^3.8.1",
     "babel-runtime": "^6.26.0",
@@ -56,8 +55,7 @@
     "babel-runtime": "^6.26.0",
     "@miriamjs/ioc": "^0.1.2"    
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "standard": {
     "parser": "babel-eslint",
     "globals": [
@@ -67,9 +65,13 @@
       "describe",
       "use",
       "fetch",
-      "assert",
-      "server",
-      "assertThrowsAsync"
+      "expect",
+      "server"
     ]
+  },
+  "jest": {
+    "verbose": true,
+    "testMatch": ["**/__tests__/**/*.test.js?(x)"]
   }
 }
+
