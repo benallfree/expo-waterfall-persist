@@ -21,8 +21,9 @@
     "build": "webpack",
     "build:watch": "webpack --watch",
     "postinstall": "pm2 restart wml",
-    "postuninstall": "pm2 restart wml"
-
+    "postuninstall": "pm2 restart wml",
+    "patch": "(npm version patch) && (npm publish) && (git push) && (git push --tags)"
+    
   },
   "keywords": [
     "miriam"

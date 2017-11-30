@@ -3,25 +3,22 @@ require('./bootstrap')
 
 describe('Transport', function () {
   beforeEach(() => {
-    assert.isTrue(true)
+    expect(true).toBeTruthy()
   })
   it('can test something', function () {
-    assert.containSubset({ a: 1, b: { c: 1 } }, { b: { c: 1 } })
+    expect({ a: 1, b: { c: 1 } }).toMatchObject({ b: { c: 1 } })
   })
 
   it('can test something async', async function () {
     return new Promise((resolve, reject) => {
-      assert.containSubset({ a: 1, b: { c: 1 } }, { b: { c: 1 } })
+      expect({ a: 1, b: { c: 1 } }).toMatchObject({ b: { c: 1 } })
       resolve()
     })
   })
 
   it('can test throws async', async function () {
-    return assert.throwsAsync(async ()=>{
-      return new Promise((resolve, reject) => {
-        throw new Error("Hello world")
-      })
-    }, Error)
+    return expect(new Promise((resolve, reject) => {
+      throw new Error('Hello world')
+    })).rejects.toBeInstanceOf(Error)
   })
-
 })
