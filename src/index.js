@@ -3,77 +3,101 @@ import { default as baseCreateStore } from 'react-waterfall'
 import _ from 'lodash'
 
 function createStoreAsync(config, options = {}) {
-  const defaults = {
-    Log: {
-      debug() {
-        console.log.apply(null, arguments)
-      },
-      error() {
-        console.error.apply(null, arguments)
-      }
+  const Log = {
+    debug() {
+      console.log.apply(null, arguments)
     },
+    error() {
+      console.error.apply(null, arguments)
+    }
+  }
+
+  const defaults = {
     fileUri: `${FileSystem.documentDirectory}/state.json`,
     debounce: {
       wait: 250,
       maxWait: 1000
     },
-    onSaveError: e => {
-      this.Log.error(e)
-      throw e
+    onLoaded({ state, fileUri }) {
+      Log.debug(`State loaded from ${fileUri}`, state)
     },
-    onLoadError: e => {
-      this.Log.error(e)
-      throw e
+    onSaved(state, fileUri) {
+      Log.debug(`State saved to ${fileUri}`, state)
+    },
+    onSaveError({ error, fileUri }) {
+      Log.debug(`Failed to save ${fileUri}`)
+      Log.error(error)
+      throw error
+    },
+    onLoadError({ error, fileUri }) {
+      Log.debug(`Failed to load ${fileUri}`)
+      Log.error(error)
+      throw error
+    },
+    onVersionMismatch({ oldState, newVersion }) {
+      Log.debug(
+        `Version mismatch (${oldState.version} vs ${newVersion}). State reset.`,
+        oldState
+      )
+    },
+    onPersistedStateNotFound({ fileUri }) {
+      Log.debug(`No saved state found on ${fileUri}, using defaults.`)
     }
   }
   const opts = _.merge({}, defaults, options)
 
   return new Promise((resolve, reject) => {
-    const { fileUri, Log, onLoadError, onSaveError } = opts
-    Log.debug(`Loading state from ${fileUri}`)
+    const {
+      fileUri,
+      onLoadError,
+      onSaveError,
+      onSaved,
+      onVersionMismatch,
+      onLoaded,
+      onPersistedStateNotFound
+    } = opts
     new Promise((resolve, reject) => {
       FileSystem.readAsStringAsync(fileUri)
         .then(s => {
           let state = JSON.parse(s)
           if (!state || state.version != config.initialState.version) {
-            Log.debug(
-              `State verison differs (${state.version} vs ${
-                config.initialState.version
-              }, discarding.`
-            )
+            onVersionMismatch({
+              oldState: state,
+              newVersion: config.initialState.version
+            })
           } else {
-            Log.debug('State restored', state)
+            onLoaded({ state, fileUri })
             config.initialState = { ...state }
           }
 
           resolve(config)
         })
-        .catch(e => {
-          if (e.code === 'E_FILE_NOT_READ') {
-            Log.debug('No saved state found, using defaults.')
+        .catch(error => {
+          if (error.code === 'E_FILE_NOT_READ') {
+            onPersistedStateNotFound({ fileUri })
           } else {
-            onLoadError(e)
+            onLoadError({ error, fileUri })
           }
           resolve(config)
         })
     }).then(config => {
       let stateMirror = _.merge({}, config.initialState)
-      Log.debug('Waterfall Config', config)
       const Waterfall = baseCreateStore(config)
 
       let save = _.debounce(
         () => {
           FileSystem.writeAsStringAsync(fileUri, JSON.stringify(stateMirror))
             .then(() => {
-              Log.debug('State persisted', stateMirror)
+              onSaved({ state: stateMirror, fileUri })
             })
-            .catch(onSaveError)
+            .catch(error => {
+              onSaveError({ error, fileUri })
+            })
         },
         opts.debounce.wait,
         { maxWait: opts.debounce.maxWait }
       )
       Waterfall.subscribe(function(actionName, stateFragmentResult) {
-        Log.debug('saved to mirror', stateFragmentResult)
         _.merge(stateMirror, stateFragmentResult)
         save()
       })

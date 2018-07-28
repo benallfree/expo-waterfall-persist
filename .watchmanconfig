@@ -1,9 +1,3 @@
 {
-  "ignore_dirs": [
-    ".git",
-    "node_modules",
-    "src",
-    "test",
-    ".vscode"
-  ]
+  "ignore_dirs": [".git", "node_modules", "src", "test", ".vscode"]
 }
