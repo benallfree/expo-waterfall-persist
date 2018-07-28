@@ -1,4 +1,3 @@
+class ExpoWaterfallPersistError extends Error {}
 
-module.exports = {
-  <PackageNameClassified>Error: class extends Error { }
-}
+export { ExpoWaterfallPersistError }

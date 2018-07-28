@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     es6: true
   },
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  extends: ['eslint:recommended'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true
@@ -12,17 +12,14 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
-  plugins: ['react'],
+  plugins: [],
   rules: {
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     'no-unused-vars': ['warn'],
-    'no-console': ['warn'],
-    'react/prop-types': ['warn'],
-    'react/no-string-refs': ['warn']
+    'no-console': ['warn']
   },
-  globals: {
-  }
+  globals: {}
 }

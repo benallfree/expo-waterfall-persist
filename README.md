@@ -1,32 +1,49 @@
-# <RepoName>
+# expo-waterfall-persist
 
-`<RepoName>` is <PackageIs>
+`expo-waterfall-persist` is A persistent state storage extension for react-waterfall running in Expo.
 
-<PackageLongDescription>
+`react-waterfall` is an amazingly easy-to-use state management package for React. You can use `expo-waterfall-react` to automagically store and retrieve Waterfall state in your Expo (React Native) app.
 
 ```
-npm install <NpmUser>/<RepoName>
+npm install expo-waterfall-persist
 ```
 
-# Features
+# Usage
 
-* Feature 1
-* Feature 2
+```
+import { createStoreAsync } from 'expo-waterfall-persist'
 
-# Developing this Package
+const Greeting = ()=>(<Text>{this.props.greeting}</Text>)
 
-## Watchman Configuration
+class App extends Component {
+  conig = {
+    initialState: {greeting: 'Hello world'},
+    actionsCreators: {
+      setGreeting: (state, actions, greeting)=>({ greeting})
+    }
+  }
 
-In order to use `<RepoName>` in your project while also developing it:
+  state: {
+    isLoaded: false
+  }
 
-```bash
-cd /my/local/spot
-git clone git@github.com:<RepoUser>/<RepoName>.git <RepoName>
-brew uninstall watchman
-brew update && brew upgrade
-brew install --HEAD watchman
-npm i -g wml
-wml add <src> <dst>
-wml list
-wml start
+
+  componentDidMount() {
+    createStoreAsync(this.config).then( ( { Provider, actions, connect, subscribe, unsubscribe } )=>{
+      this.Provider = Provider
+      this.Greeting = connect({greeting}=>{greeting})(Greeting)
+      this.setState({isLoaded: true})
+    })
+  }
+
+  render() {
+    if (!this.state.isLoaded) return null
+
+    return (
+      <this.Provider>
+        <this.Greeting/>
+      </this.Provider>
+    )
+  }
+}
 ```
