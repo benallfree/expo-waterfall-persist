@@ -2,8 +2,12 @@ src
 test
 .babelrc
 .gitignore
+.eslintrc.js
+.prettierrc
 .mocharc
 .node-version
 .nvmrc
+.vscode
+.editorconfig
 webpack.config.js
 yarn.lock
