@@ -1,8 +1,8 @@
 # expo-waterfall-persist
 
-## [Run the demo on Expo.io](https://exp.host/@benallfree/expo-waterfall-persist-demo) / [Clone the demo](/benallfree/expo-waterfall-persist-demo)
+## [Run the demo on Expo.io](https://exp.host/@benallfree/expo-waterfall-persist-demo) / [Clone the demo](https://github.com/benallfree/expo-waterfall-persist-demo)
 
-`expo-waterfall-persist` is persistent storage middleware for [react-waterfall](/didierfranc/react-waterfall), for Expo apps.
+`expo-waterfall-persist` is persistent storage middleware for [react-waterfall](https://github.com/didierfranc/react-waterfall), for Expo apps.
 
 ![demo](https://thumbs.gfycat.com/WhitePaleEquine-size_restricted.gif)
 
@@ -48,7 +48,7 @@ _Props:_
 
 ## More Complete Example
 
-See [expo-waterfall-persist-demo](/benallfre/expo-waterfall-persist-demo) for a working example.
+See [expo-waterfall-persist-demo](https://github.com/benallfree/expo-waterfall-persist-demo) for a working example.
 
 ```jsx
 import React from 'react'
