@@ -1,109 +1,150 @@
 import { FileSystem } from 'expo'
-import { default as baseCreateStore } from 'react-waterfall'
 import _ from 'lodash'
+import PropTypes from 'prop-types'
 
-function createStoreAsync(config, options = {}) {
-  const Log = {
-    debug() {
-      console.log.apply(null, arguments)
-    },
-    error() {
-      console.error.apply(null, arguments)
-    }
+const Log = {
+  debug() {
+    console.log.apply(null, arguments)
+  },
+  error() {
+    console.error.apply(null, arguments)
+  }
+}
+
+const propTypes = {
+  fileUri: PropTypes.string,
+  debounce: PropTypes.object,
+  onLoaded: PropTypes.func,
+  onSaved: PropTypes.func,
+  onSaveError: PropTypes.func,
+  onLoadError: PropTypes.func,
+  onVersionMismatch: PropTypes.func,
+  onPersistedStateNotFound: PropTypes.func,
+  onReady: PropTypes.func
+}
+
+const defaultProps = {
+  fileUri: `${FileSystem.documentDirectory}/state.json`,
+  debounce: {
+    wait: 250,
+    maxWait: 1000
+  },
+  onLoaded({ state, fileUri }) {
+    Log.debug(`State loaded from ${fileUri}`, state)
+  },
+  onSaved({ state, fileUri }) {
+    Log.debug(`State saved to ${fileUri}`, state)
+  },
+  onSaveError({ error, fileUri }) {
+    Log.debug(`Failed to save ${fileUri}`)
+    Log.error(error)
+    throw error
+  },
+  onLoadError({ error, fileUri }) {
+    Log.debug(`Failed to load ${fileUri}`)
+    Log.error(error)
+    throw error
+  },
+  onVersionMismatch({ oldState, newVersion }) {
+    Log.debug(
+      `Version mismatch (${oldState.version} vs ${newVersion}). State reset.`,
+      oldState
+    )
+  },
+  onPersistedStateNotFound({ fileUri }) {
+    Log.debug(`No saved state found on ${fileUri}, using defaults.`)
+  },
+  onReady() {
+    Log.debug('Provider is ready.')
+  }
+}
+
+function persist({ setState, Provider, subscribe }) {
+  Provider.propTypes = _.merge({}, propTypes, Provider.propTypes)
+  Provider.defaultProps = _.merge({}, defaultProps, Provider.defaultProps)
+  let oldComponentWillMount = Provider.prototype.componentWillMount
+  Provider.prototype.componentWillMount = function() {
+    if (oldComponentWillMount) oldComponentWillMount.call(this, ...arguments)
+    this.setState({ __isStateReady: false })
+  }
+  let oldRender = Provider.prototype.render
+  Provider.prototype.render = function() {
+    if (!this.state.__isStateReady) return null
+    return oldRender.call(this, ...arguments)
   }
 
-  const defaults = {
-    fileUri: `${FileSystem.documentDirectory}/state.json`,
-    debounce: {
-      wait: 250,
-      maxWait: 1000
-    },
-    onLoaded({ state, fileUri }) {
-      Log.debug(`State loaded from ${fileUri}`, state)
-    },
-    onSaved(state, fileUri) {
-      Log.debug(`State saved to ${fileUri}`, state)
-    },
-    onSaveError({ error, fileUri }) {
-      Log.debug(`Failed to save ${fileUri}`)
-      Log.error(error)
-      throw error
-    },
-    onLoadError({ error, fileUri }) {
-      Log.debug(`Failed to load ${fileUri}`)
-      Log.error(error)
-      throw error
-    },
-    onVersionMismatch({ oldState, newVersion }) {
-      Log.debug(
-        `Version mismatch (${oldState.version} vs ${newVersion}). State reset.`,
-        oldState
-      )
-    },
-    onPersistedStateNotFound({ fileUri }) {
-      Log.debug(`No saved state found on ${fileUri}, using defaults.`)
+  return function(config, providerInstance) {
+    let tryCall = function(func, args) {
+      if (!func) return
+      return func(args)
     }
-  }
-  const opts = _.merge({}, defaults, options)
 
-  return new Promise((resolve, reject) => {
-    const {
-      fileUri,
-      onLoadError,
-      onSaveError,
-      onSaved,
-      onVersionMismatch,
-      onLoaded,
-      onPersistedStateNotFound
-    } = opts
-    new Promise((resolve, reject) => {
-      FileSystem.readAsStringAsync(fileUri)
+    new Promise(resolve => {
+      FileSystem.readAsStringAsync(providerInstance.props.fileUri)
         .then(s => {
           let state = JSON.parse(s)
           if (!state || state.version != config.initialState.version) {
-            onVersionMismatch({
+            tryCall(providerInstance.props.onVersionMismatch, {
               oldState: state,
               newVersion: config.initialState.version
             })
           } else {
-            onLoaded({ state, fileUri })
-            config.initialState = { ...state }
+            tryCall(providerInstance.props.onLoaded, {
+              state,
+              fileUri: providerInstance.props.fileUri
+            })
+            resolve(state)
           }
-
-          resolve(config)
+          resolve(config.initialState)
         })
         .catch(error => {
           if (error.code === 'E_FILE_NOT_READ') {
-            onPersistedStateNotFound({ fileUri })
+            tryCall(providerInstance.props.onPersistedStateNotFound, {
+              fileUri: providerInstance.props.fileUri
+            })
           } else {
-            onLoadError({ error, fileUri })
+            tryCall(providerInstance.props.onLoadError, {
+              error,
+              fileUri: providerInstance.props.fileUri
+            })
           }
-          resolve(config)
+          resolve(config.initialState)
         })
-    }).then(config => {
-      let stateMirror = _.merge({}, config.initialState)
-      const Waterfall = baseCreateStore(config)
-
+    }).then(stateMirror => {
+      setState('__persist__', stateMirror)
       let save = _.debounce(
         () => {
-          FileSystem.writeAsStringAsync(fileUri, JSON.stringify(stateMirror))
+          FileSystem.writeAsStringAsync(
+            providerInstance.props.fileUri,
+            JSON.stringify(stateMirror)
+          )
             .then(() => {
-              onSaved({ state: stateMirror, fileUri })
+              tryCall(providerInstance.props.onSaved, {
+                state: stateMirror,
+                fileUri: providerInstance.props.fileUri
+              })
             })
             .catch(error => {
-              onSaveError({ error, fileUri })
+              tryCall(providerInstance.props.onSaveError, {
+                error,
+                fileUri: providerInstance.props.fileUri
+              })
             })
         },
-        opts.debounce.wait,
-        { maxWait: opts.debounce.maxWait }
+        providerInstance.props.debounce.wait,
+        { maxWait: providerInstance.props.debounce.maxWait }
       )
-      Waterfall.subscribe(function(actionName, stateFragmentResult) {
+      subscribe(function(actionName, stateFragmentResult) {
         _.merge(stateMirror, stateFragmentResult)
         save()
       })
-      resolve(Waterfall)
+      providerInstance.setState({ __isStateReady: true })
+      tryCall(providerInstance.props.onReady)
     })
-  })
+    return function(action, ...args) {
+      // noop
+    }
+  }
 }
 
-export { createStoreAsync }
+export { persist }
