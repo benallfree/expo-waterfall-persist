@@ -1,6 +1,6 @@
 # expo-waterfall-persist
 
-## [Run the demo on Expo.io](https://exp.host/@benallfree/expo-waterfall-persist-demo) / [Clone the demo](/benallfre/expo-waterfall-persist-demo)
+## [Run the demo on Expo.io](https://exp.host/@benallfree/expo-waterfall-persist-demo) / [Clone the demo](/benallfree/expo-waterfall-persist-demo)
 
 `expo-waterfall-persist` is persistent storage middleware for [react-waterfall](/didierfranc/react-waterfall), for Expo apps.
 
