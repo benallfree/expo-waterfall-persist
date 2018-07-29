@@ -2,9 +2,7 @@
 
 ## [Run the demo on Expo.io](https://exp.host/@benallfree/expo-waterfall-persist-demo) / [Clone the demo](/benallfre/expo-waterfall-persist-demo)
 
-expo-waterfall-persist is a persistent state storage extension for [react-waterfall](/didierfranc/react-waterfall) running in Expo.
-
-Want to use the beautiful react-waterfall in your Expo app and persist the state to file storage? This package is for you!
+`expo-waterfall-persist` is persistent storage middleware for [react-waterfall](/didierfranc/react-waterfall), for Expo apps.
 
 ![demo](https://thumbs.gfycat.com/WhitePaleEquine-size_restricted.gif)
 
